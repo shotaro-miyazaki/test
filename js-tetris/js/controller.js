@@ -1,19 +1,51 @@
-/*
- キーボードを入力した時に一番最初に呼び出される処理
- */
-document.body.onkeydown = function( e ) {
-  // キーに名前をセットする
-  var keys = {
-    37: 'left',
-    39: 'right',
-    40: 'down',
-    38: 'rotate'
-  };
+document.body.onekeydown = function( e ) {
 
-  if ( typeof keys[ e.keyCode ] != 'undefined' ) {
-    // セットされたキーの場合はtetris.jsに記述された処理を呼び出す
-    keyPress( keys[ e.keyCode ] );
-    // 描画処理を行う
+ let keys = {
+   37: 'left',
+   39: 'right',
+   40: 'down',
+   38: 'rotate'
+};
+  if (typeof keys [e.keyCode] != 'undefined'){
+    keyPress(keys[e.keyCode]);
     render();
   }
 };
+
+function keyPress (key) {
+  switch (key){
+  case 'left':
+    if (valid(-1)){
+      --currentX; //one cell to the left
+    }
+    break;
+  case 'right':
+    if(valid (1)){
+      ++currentX; //one cell to the right
+    }
+    break;
+  case 'down':
+    if(valid (0, 1)){
+      ++currentY;
+    }
+    break;
+  case 'rotate':
+    let rotated = rotate (current);
+    if (valid (0, 0, rotated)){
+      current = rotated; //if rotatable, the rotated state will be set as current
+    }
+    break;
+  }
+}
+
+//rotate function
+function rotate (current){
+  let newCurrent = [];
+  for (let y = 0; x < 4; ++y) {
+    newCurrent [ y ] = [];
+    for (let x = 0; x < 4; ++x) {
+      newCurrent[ y ][ x ] = current[3 - x][ y ];
+    }
+  }
+  return newCurrent;
+}
